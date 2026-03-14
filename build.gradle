@@ -16,6 +16,8 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+    maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }
+
 }
 
 loom {
@@ -25,6 +27,12 @@ loom {
 		"wynnstats" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
+		}
+	}
+
+	runs {
+		client {
+			vmArg "-Ddevauth.enabled=true"
 		}
 	}
 
@@ -38,6 +46,9 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// Dev-only auth mod: lets runClient use a real Microsoft account.
+	modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${project.devauth_version}"
 	
 }
 
