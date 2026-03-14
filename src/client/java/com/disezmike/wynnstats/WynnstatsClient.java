@@ -2,8 +2,6 @@ package com.disezmike.wynnstats;
 
 import java.nio.file.Path;
 
-import org.jspecify.annotations.NonNull;
-
 import com.disezmike.wynnstats.util.CharacterData;
 import com.disezmike.wynnstats.util.ItemCache;
 import com.google.gson.JsonObject;
