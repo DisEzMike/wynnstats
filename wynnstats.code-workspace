@@ -13,6 +13,10 @@
 			"path": "."
 		},
 		{
+			"name": "Build",
+			"path": "./build"
+		},
+		{
 			"name": ".vscode",
 			"path": "./.vscode"
 		}
