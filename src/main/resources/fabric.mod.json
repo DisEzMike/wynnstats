@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "wynnstats",
+	"version": "${version}",
+	"name": "wynnstats",
+	"description": "A client-side mod to export Wynncraft player stats, ability trees, and gear data into a JSON file.",
+	"authors": [
+		"disezmike"
+	],
+	"contact": {
+		"sources": "https://github.com/disezmike/wynnstats"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/wynnstats/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.disezmike.wynnstats.Wynnstats"
+		],
+		"client": [
+			"com.disezmike.wynnstats.WynnstatsClient"
+		]
+	},
+	"mixins": [
+		"wynnstats.mixins.json",
+		{
+			"config": "wynnstats.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

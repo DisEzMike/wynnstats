@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"name": "Wynnstats",
+			"path": "./src/client/java/com/disezmike/wynnstats"
+		},
+		{
+			"name": "Main",
+			"path": "./src/main"
+		},
+		{
+			"name": "Root",
+			"path": "."
+		},
+		{
+			"name": ".vscode",
+			"path": "./.vscode"
+		}
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "automatic",
+		"java.configuration.updateBuildConfiguration": "interactive"
+	}
+}
