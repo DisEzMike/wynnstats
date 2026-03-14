@@ -5,6 +5,8 @@ import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.disezmike.wynnstats.util.ItemCache;
+
 public class Wynnstats implements ModInitializer {
 	public static final String MOD_ID = "wynnstats";
 
@@ -19,6 +21,7 @@ public class Wynnstats implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
+		ItemCache.initialize();
 		LOGGER.info("Hello Fabric world!");
 	}
 }
