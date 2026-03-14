@@ -2,7 +2,7 @@
 
 A client-side Fabric mod for Minecraft 1.21.11 that exports [Wynncraft](https://wynncraft.com) player stats, ability trees, and gear data into a JSON file.
 
-> **⚠️ BETA VERSION** - This is an early beta release (v0.1.0). Expect bugs and breaking changes. Please report issues on [GitHub](https://github.com/disezmike/wynnstats).
+> **⚠️ BETA VERSION** - This is an early beta release (v0.1.0-beta.1). Expect bugs and breaking changes. Please report issues on [GitHub](https://github.com/disezmike/wynnstats).
 
 ## Features
 
@@ -56,4 +56,4 @@ This project is licensed under CC0-1.0 - See LICENSE file for details.
 
 ---
 
-*Last Updated: March 2026 - Beta v0.1.0* 
+*Last Updated: March 2026 - v0.1.0-beta.1* 
