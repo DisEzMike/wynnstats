@@ -1,15 +1,12 @@
 # Wynnstats
 
-A client-side Fabric mod for Minecraft 1.21.11 that exports [Wynncraft](https://wynncraft.com) player stats, ability trees, and gear data into a JSON file.
-
-> **⚠️ BETA VERSION** - This is an early beta release (v0.1.0-beta.1). Expect bugs and breaking changes. Please report issues on [GitHub](https://github.com/disezmike/wynnstats).
+A client-side Fabric mod for Minecraft 1.21.11 that exports equipped [Wynncraft](https://wynncraft.com) gear and parsed item stats into a JSON file.
 
 ## Features
 
-- Save equipped gear information (hotbar, armor, accessories)
-- Automatic gear data lookup from Wynncraft API
-- Output data in standardized JSON format
-- Local item cache for offline gear lookups
+- Export equipped build slots (main hand, armor, accessories)
+- Parse lore into structured item stats (base stats, identifications, major IDs, tier)
+- Save export output as pretty-printed JSON at `exports/wynnstats_export.json`
 
 ## Planned Features
 
@@ -25,12 +22,7 @@ A client-side Fabric mod for Minecraft 1.21.11 that exports [Wynncraft](https://
 
 ## Commands
 
-- `/wynnstats` - Exports current player gear to `wynnstats_output.json` in the Minecraft directory.
-
-## Known Limitations (Beta)
-
-- Data format may change in future releases
-- Some advanced gear attributes may not be captured
+- `/wynnstats` - Exports current player build data to `exports/wynnstats_export.json` in the Minecraft directory.
 
 ## Development
 
@@ -56,4 +48,4 @@ This project is licensed under CC0-1.0 - See LICENSE file for details.
 
 ---
 
-*Last Updated: March 2026 - v0.1.0-beta.1* 
+*Last Updated: April 2026 - v0.2.0* 
