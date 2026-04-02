@@ -1,4 +1,4 @@
-package com.disezmike.wynnstats.client;
+package com.disezmike.wynnstats;
 
 import com.disezmike.wynnstats.command.WynnstatsCommand;
 

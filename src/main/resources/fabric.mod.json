@@ -18,16 +18,10 @@
 			"com.disezmike.wynnstats.Wynnstats"
 		],
 		"client": [
-			"com.disezmike.wynnstats.client.WynnstatsClient"
+			"com.disezmike.wynnstats.WynnstatsClient"
 		]
 	},
-	"mixins": [
-		"wynnstats.mixins.json",
-		{
-			"config": "wynnstats.client.mixins.json",
-			"environment": "client"
-		}
-	],
+	"mixins": [],
 	"depends": {
 		"fabricloader": ">=0.18.4",
 		"minecraft": "~1.21.11",

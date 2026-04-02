@@ -121,11 +121,4 @@ public class LoreParser {
             }
         }
     }
-
-    private static void printRawLore(ItemLore lore) {
-        for (Component line : lore.lines()) {
-            String text = clean(line.getString());
-            System.out.println(text);
-        }
-    }
 }

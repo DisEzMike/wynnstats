@@ -2,7 +2,7 @@
 	"folders": [
 		{
 			"name": "Wynnstats",
-			"path": "./src/main/java/com/disezmike/wynnstats"
+			"path": "./src/client/java/com/disezmike/wynnstats"
 		},
 		{
 			"name": "Main",
