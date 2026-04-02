@@ -18,7 +18,7 @@
 			"com.disezmike.wynnstats.Wynnstats"
 		],
 		"client": [
-			"com.disezmike.wynnstats.WynnstatsClient"
+			"com.disezmike.wynnstats.client.WynnstatsClient"
 		]
 	},
 	"mixins": [

@@ -2,7 +2,7 @@
 	"folders": [
 		{
 			"name": "Wynnstats",
-			"path": "./src/client/java/com/disezmike/wynnstats"
+			"path": "./src/main/java/com/disezmike/wynnstats"
 		},
 		{
 			"name": "Main",
@@ -23,6 +23,7 @@
 	],
 	"settings": {
 		"java.compile.nullAnalysis.mode": "automatic",
-		"java.configuration.updateBuildConfiguration": "interactive"
+		"java.configuration.updateBuildConfiguration": "interactive",
+		"java.debug.settings.onBuildFailureProceed": true
 	}
 }

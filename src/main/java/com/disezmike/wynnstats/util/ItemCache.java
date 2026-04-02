@@ -1,5 +1,7 @@
 package com.disezmike.wynnstats.util;
 
+import com.disezmike.wynnstats.model.ItemData;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.net.URI;
@@ -15,6 +17,7 @@ import java.util.Map;
 public class ItemCache {
     private static final String API_URL = "https://api.wynncraft.com/v3/item/database?fullResult";
     private static final Path CACHE_PATH = Paths.get("config/wynnstats/item_cache.json");
+    private static final Gson GSON = new Gson();
     private static final Map<String, JsonObject> ITEM_MAP = new HashMap<>();
 
     public static void initialize() {
@@ -51,8 +54,6 @@ public class ItemCache {
 
     private static void parseJson(String json) {
         JsonObject root = JsonParser.parseString(json).getAsJsonObject();
-        // Wynncraft API v3 เก็บไอเทมไว้ในฟิลด์ที่ชื่อว่า "items" หรือเป็น Map โดยตรง
-        // หมายเหตุ: คุณต้องเช็กโครงสร้าง JSON จริงจาก API อีกทีนะครับ
         root.entrySet().forEach(entry -> {
             if (entry.getValue().isJsonObject()) {
                 ITEM_MAP.put(entry.getKey(), entry.getValue().getAsJsonObject());
@@ -62,5 +63,14 @@ public class ItemCache {
 
     public static JsonObject get(String itemName) {
         return ITEM_MAP.get(itemName);
+    }
+
+    public static ItemData getTyped(String itemName) {
+        JsonObject item = ITEM_MAP.get(itemName);
+        if (item == null) {
+            return null;
+        }
+
+        return GSON.fromJson(item, ItemData.class);
     }
 }
