@@ -21,9 +21,11 @@ public class LoreParser {
         Map<String, String> base = new HashMap<>();
         Map<String, Integer> ids = new HashMap<>();
         List<String> majors = new ArrayList<>();
+        List<String> powderEffects = new ArrayList<>();
         String tier = "Normal";
 
         boolean skippingSetBonus = false;
+        boolean skippingPowderEffects = false;
 
         for (Component line : lore.lines()) {
             String text = clean(line.getString());
@@ -32,10 +34,22 @@ public class LoreParser {
                 skippingSetBonus = true;
                 continue;
             }
-
             if (skippingSetBonus) {
                 if (text.isEmpty()) {
                     skippingSetBonus = false;
+                }
+                continue;
+            }
+
+            // Powder Effect
+            if (isPowderEffect(text)) {
+                skippingPowderEffects = true;
+                powderEffects.add(text);
+                continue;
+            }
+            if (skippingPowderEffects) {
+                if (text.isEmpty()) {
+                    skippingPowderEffects = false;
                 }
                 continue;
             }
@@ -64,7 +78,7 @@ public class LoreParser {
             }
         }
 
-        return new ItemStatsAnalysis(name, tier, base, ids, majors);
+        return new ItemStatsAnalysis(name, tier, base, ids, majors, powderEffects);
     }
 
     // Helper method
@@ -120,5 +134,12 @@ public class LoreParser {
                 idsMap.put(StatMapper.toCamelCase(statName), value);
             }
         }
+    }
+
+    private static boolean isPowderEffect(String line) {
+        return line.contains("Quake") || line.contains("Chain Lightning") || line.contains("Curse")
+                || line.contains("Courage") || line.contains("Wind Prison")
+                || line.contains("Rage") || line.contains("Kill Streak") || line.contains("Concentration")
+                || line.contains("Endurance") || line.contains("Dodge");
     }
 }

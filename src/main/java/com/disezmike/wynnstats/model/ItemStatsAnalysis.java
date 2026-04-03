@@ -8,6 +8,7 @@ public record ItemStatsAnalysis(
         String itemTier,
         Map<String, String> baseStats,
         Map<String, Integer> identifications,
-        List<String> majorIds
+        List<String> majorIds,
+        List<String> powderEffects
     ) {
 }
