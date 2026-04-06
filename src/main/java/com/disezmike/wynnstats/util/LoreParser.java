@@ -49,10 +49,7 @@ public class LoreParser {
                 majorIds = parseMajorId(text);
             }
         }
-
-        System.out.println("Parsed Item: " + itemName);
-        System.out.println("Ids: " + ids);
-
+      
         return new ItemStatsAnalysis(itemName, type, subType, tier, majorIds, ids);
     }
 
@@ -112,5 +109,12 @@ public class LoreParser {
     private static void rawParse(String text) {
         // For debugging purposes
         System.out.println(text);
+    }
+
+    private static boolean isPowderEffect(String line) {
+        return line.contains("Quake") || line.contains("Chain Lightning") || line.contains("Curse")
+                || line.contains("Courage") || line.contains("Wind Prison")
+                || line.contains("Rage") || line.contains("Kill Streak") || line.contains("Concentration")
+                || line.contains("Endurance") || line.contains("Dodge");
     }
 }
