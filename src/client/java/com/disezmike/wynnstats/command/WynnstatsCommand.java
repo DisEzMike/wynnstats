@@ -63,9 +63,6 @@ public class WynnstatsCommand {
 
                         String itemName = itemStack.getHoverName().getString();
                         ItemLore itemLore = itemStack.get(DataComponents.LORE);
-                        if (itemLore == null)
-                            continue;
-
                         ItemStatsAnalysis itemStats = LoreParser.parse(itemName, itemLore);
                         characterData.addBuildItem(itemStats);
                     }

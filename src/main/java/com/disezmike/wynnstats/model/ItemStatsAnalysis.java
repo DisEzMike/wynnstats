@@ -1,13 +1,13 @@
 package com.disezmike.wynnstats.model;
 
-import java.util.List;
 import java.util.Map;
 
 public record ItemStatsAnalysis(
         String itemName,
-        String itemTier,
-        Map<String, String> baseStats,
-        Map<String, Integer> identifications,
-        List<String> majorIds
+        String type,
+        String subType,
+        String tier,
+        String majorIds,
+        Map<String, Integer> identifications
     ) {
 }
