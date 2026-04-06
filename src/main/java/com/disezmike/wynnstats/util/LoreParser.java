@@ -1,12 +1,15 @@
 package com.disezmike.wynnstats.util;
 
-import java.util.ArrayList;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.disezmike.wynnstats.model.ItemStatsAnalysis;
 
 import net.minecraft.network.chat.Component;
@@ -15,70 +18,39 @@ import net.minecraft.world.item.component.ItemLore;
 public class LoreParser {
     private static final String CLEANUP_REGEX = "§.|[^\\x00-\\x7F]";
 
-    private static final Pattern DIGIT_PATTERN = Pattern.compile("([+-]?\\d+)");
+    private static final Pattern IDENTIFICATION_PATTERN = Pattern.compile("^([a-zA-Z\\s]+?)\\s*([+-])([\\d,]+)");
+    private static final Pattern MARJOR_ID_PATTERN = Pattern.compile("^([a-zA-Z\\s]+?)\\s*:");
 
     public static ItemStatsAnalysis parse(String name, ItemLore lore) {
-        Map<String, String> base = new HashMap<>();
         Map<String, Integer> ids = new HashMap<>();
-        List<String> majors = new ArrayList<>();
-        List<String> powderEffects = new ArrayList<>();
-        String tier = "Normal";
+        String majorIds = "";
 
-        boolean skippingSetBonus = false;
-        boolean skippingPowderEffects = false;
+        String itemName = clean(name);
+        JsonObject itemCache = ItemCache.get(itemName);
+
+        // cache lookup
+        String type = itemCache.get("type").getAsString();
+        String subType = itemCache.get("subType").getAsString();
+        String tier = itemCache.get("tier").getAsString();
 
         for (Component line : lore.lines()) {
             String text = clean(line.getString());
 
-            if (text.startsWith("Set Bonus:")) {
-                skippingSetBonus = true;
-                continue;
-            }
-            if (skippingSetBonus) {
-                if (text.isEmpty()) {
-                    skippingSetBonus = false;
-                }
-                continue;
-            }
-
-            // Powder Effect
-            if (isPowderEffect(text)) {
-                skippingPowderEffects = true;
-                powderEffects.add(text);
-                continue;
-            }
-            if (skippingPowderEffects) {
-                if (text.isEmpty()) {
-                    skippingPowderEffects = false;
-                }
-                continue;
-            }
-
             if (text.isEmpty())
                 continue;
 
-            // Base Stats
-            if (isBaseStat(text)) {
-                parseBaseStat(text, base);
-            }
-
             // Identifications
-            else if (isIdentification(text)) {
-                parseIdentification(text, ids);
+            if (isIdentification(text)) {
+                parseIdentification(text, ids, itemCache);
             }
 
             // Major IDs
-            else if (text.startsWith("+") && !text.matches(".*\\d.*")) {
-                majors.add(text.replace("+", "").split(":")[0].trim());
-            }
-
-            // Item Tier
-            else if (text.contains("Item")) {
-                tier = text.replace("Item", "").trim();
+            else if (isMajorId(text)) {
+                majorIds = parseMajorId(text);
             }
         }
-
-        return new ItemStatsAnalysis(name, tier, base, ids, majors, powderEffects);
+      
+        return new ItemStatsAnalysis(itemName, type, subType, tier, majorIds, ids);
     }
 
     // Helper method
@@ -87,53 +59,56 @@ public class LoreParser {
         return text.replaceAll(CLEANUP_REGEX, "").trim();
     }
 
-    private static boolean isBaseStat(String text) {
-        boolean isNotIdPrefix = !text.startsWith("+") && !text.startsWith("-") && !text.startsWith("*");
-        boolean isNotRequirement = !text.contains("Min:") && !text.contains("Req:");
-
-        return isNotIdPrefix && isNotRequirement && (text.contains("Damage:") ||
-                text.contains("Health") ||
-                text.contains("Defence") ||
-                text.contains("Average DPS") ||
-                text.contains("Attack Speed"));
-    }
-
-    private static void parseBaseStat(String text, Map<String, String> baseMap) {
-        if (text.contains("Damage:")) {
-            String[] parts = text.split("Damage:");
-            String label = parts[0].trim() + " Damage";
-            baseMap.put(StatMapper.toCamelCase(label), parts[1].trim());
-        } else if (text.contains("Attack Speed")) {
-            baseMap.put(StatMapper.toCamelCase("Attack Speed"), text.replace("Attack Speed", "").trim());
-        } else {
-            Matcher m = DIGIT_PATTERN.matcher(text);
-            if (m.find()) {
-                String label = text.replaceAll("[+-]?\\d+", "").replace(":", "").trim();
-                baseMap.put(StatMapper.toCamelCase(label), m.group(1));
-            }
-        }
-    }
-
     private static boolean isIdentification(String line) {
-        return (line.startsWith("+") || line.startsWith("-") || line.startsWith("*"))
-                && line.matches(".*\\d.*")
-                && !line.contains("Min:")
-                && !line.contains("Req:")
-                && !line.contains("Damage:")
-                && !line.contains("Set Bonus:");
+        Matcher m = IDENTIFICATION_PATTERN.matcher(line);
+        return m.find();
     }
 
-    private static void parseIdentification(String text, Map<String, Integer> idsMap) {
-        Matcher m = DIGIT_PATTERN.matcher(text);
+    private static void parseIdentification(String text, Map<String, Integer> idsMap, JsonObject itemCache) {
+        Matcher m = IDENTIFICATION_PATTERN.matcher(text);
         if (m.find()) {
-            int value = Integer.parseInt(m.group(1));
-            String statName = text.replaceAll("^[+-]?\\d+(%|/\\d+s)?", "")
-                    .replaceAll("\\*", "").trim();
+            JsonElement identifications = itemCache.get("identifications");
+            NumberFormat format = NumberFormat.getInstance(Locale.US);
+            try {
+                Number parsedNumber = format.parse(m.group(3).replaceAll(",", ""));
+                int value = parsedNumber.intValue();
+                String statName = m.group(1);
 
-            if (!statName.isEmpty() && !statName.contains(":")) {
-                idsMap.put(StatMapper.toCamelCase(statName), value);
+                List<String> alliesOfKey = List.of(StatMapper.toCamelCase("raw " + statName),
+                        StatMapper.toCamelCase(statName + " raw"), StatMapper.toCamelCase(statName));
+
+                for (String key : alliesOfKey) {
+                    if (identifications != null && identifications.getAsJsonObject().has(key)) {
+                        statName = key;
+                        break;
+                    }
+                }
+
+                if (!statName.isEmpty() && !statName.contains(":")) {
+                    idsMap.put(statName, value);
+                }
+            } catch (java.text.ParseException e) {
+                System.err.println("Failed to parse number: " + m.group(3));
             }
         }
+    }
+
+    private static boolean isMajorId(String line) {
+        Matcher m = MARJOR_ID_PATTERN.matcher(line);
+        return m.find();
+    }
+
+    private static String parseMajorId(String text) {
+        Matcher m = MARJOR_ID_PATTERN.matcher(text);
+        if (m.find()) {
+            return m.group(1).trim();
+        }
+        return "";
+    }
+
+    private static void rawParse(String text) {
+        // For debugging purposes
+        System.out.println(text);
     }
 
     private static boolean isPowderEffect(String line) {
