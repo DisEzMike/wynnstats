@@ -48,4 +48,4 @@ This project is licensed under CC0-1.0 - See LICENSE file for details.
 
 ---
 
-*Last Updated: April 2026 - v0.2.0* 
+*Last Updated: April 2026 - v0.2.1* 
