@@ -1,3 +1,4 @@
+# DEPRECATED
 # Wynnstats
 
 A client-side Fabric mod for Minecraft 1.21.11 that exports equipped [Wynncraft](https://wynncraft.com) gear and parsed item stats into a JSON file.
